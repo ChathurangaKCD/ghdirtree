@@ -10,7 +10,7 @@ const data = fs.readFileSync(filename, "utf8");
   const start = Date.now();
   const _ = processFile(obj);
   const end = Date.now();
-  console.log("Time: ", end - start);
+  console.log("Before time: ", end - start);
 
   // write json file
   const filename2 = path.join(__dirname, "../out/out2.json");
@@ -21,10 +21,10 @@ const data = fs.readFileSync(filename, "utf8");
   const start = Date.now();
   const _ = processFile2(obj);
   const end = Date.now();
-  console.log("Time: ", end - start);
+  console.log("New time: ", end - start);
 
   // write json file
-  const filename2 = path.join(__dirname, "../out/out3.json");
+  const filename2 = path.join(__dirname, "../out/out2.json");
   fs.writeFileSync(filename2, JSON.stringify(_, null, 2));
 }
 
