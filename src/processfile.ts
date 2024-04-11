@@ -24,7 +24,7 @@ const data = fs.readFileSync(filename, "utf8");
   console.log("New time: ", end - start);
 
   // write json file
-  const filename2 = path.join(__dirname, "../out/out3.json");
+  const filename2 = path.join(__dirname, "../out/out2.json");
   fs.writeFileSync(filename2, JSON.stringify(out2, null, 2));
 }
 
@@ -56,6 +56,7 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
         }
       }
     }
+    // push to directories or files
     const node: DirectoryNode = {
       path: item.path,
       subPath: item.path.split("/").pop()!,
@@ -68,6 +69,9 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
       files.set(item.path, node);
     }
   }
+  // modify the directories map items by adding children.
+  // a child directory will be added to its parent directory
+  // (same object is kept as children in parent directory & also in directories map)
   for (const [path, node] of directories) {
     const parent = directories.get(parentPath(path));
     if (parent) {
@@ -76,8 +80,10 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
   }
   for (const [path, node] of files) {
     if (path === node.subPath) {
+      // add files in the root directory
       directories.set(path, node);
     }
+    // add files to their parent directory
     const parent = directories.get(parentPath(path));
     if (parent) {
       parent.children.push(node);
@@ -97,6 +103,7 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
       }
     });
   }
+  // include only root directories. others are already included as children
   return Array.from(directories.values()).filter(
     (node) => node.path == node.subPath
   );
