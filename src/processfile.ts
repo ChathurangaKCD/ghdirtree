@@ -5,17 +5,17 @@ import * as path from "path";
 const filename = path.join(__dirname, "../data/out.json");
 console.log("read file: ", filename);
 const data = fs.readFileSync(filename, "utf8");
-{
-  const obj = JSON.parse(data);
-  const start = Date.now();
-  const out1 = processFile(obj);
-  const end = Date.now();
-  console.log("Before time: ", end - start);
+// {
+//   const obj = JSON.parse(data);
+//   const start = Date.now();
+//   const out1 = processFile(obj);
+//   const end = Date.now();
+//   console.log("Before time: ", end - start);
 
-  // write json file
-  const filename2 = path.join(__dirname, "../out/out2.json");
-  fs.writeFileSync(filename2, JSON.stringify(out1, null, 2));
-}
+//   // write json file
+//   const filename2 = path.join(__dirname, "../out/out2.json");
+//   fs.writeFileSync(filename2, JSON.stringify(out1, null, 2));
+// }
 {
   const obj = JSON.parse(data);
   const start = Date.now();
