@@ -8,24 +8,24 @@ const data = fs.readFileSync(filename, "utf8");
 {
   const obj = JSON.parse(data);
   const start = Date.now();
-  const _ = processFile(obj);
+  const out1 = processFile(obj);
   const end = Date.now();
   console.log("Before time: ", end - start);
 
   // write json file
   const filename2 = path.join(__dirname, "../out/out2.json");
-  fs.writeFileSync(filename2, JSON.stringify(_, null, 2));
+  fs.writeFileSync(filename2, JSON.stringify(out1, null, 2));
 }
 {
   const obj = JSON.parse(data);
   const start = Date.now();
-  const _ = processFile2(obj);
+  const out2 = processFile2(obj);
   const end = Date.now();
   console.log("New time: ", end - start);
 
   // write json file
-  const filename2 = path.join(__dirname, "../out/out2.json");
-  fs.writeFileSync(filename2, JSON.stringify(_, null, 2));
+  const filename2 = path.join(__dirname, "../out/out3.json");
+  fs.writeFileSync(filename2, JSON.stringify(out2, null, 2));
 }
 
 ////////////////////////////////////////////////////////////////////
