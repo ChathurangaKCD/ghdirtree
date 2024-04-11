@@ -101,16 +101,10 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
 }
 
 function compareItems(a: DirectoryNode, b: DirectoryNode) {
-  const element1IsDirectory = a.type === "tree";
-  const element2IsDirectory = b.type === "tree";
-  // Sort directories before files
-  if (element1IsDirectory && !element2IsDirectory) {
-    return -1;
-  } else if (!element1IsDirectory && element2IsDirectory) {
-    return 1;
-  } else {
-    return a.subPath.localeCompare(b.subPath); // Sort alphabetically by subPath
+  if (a.type === b.type) {
+    return a.subPath.localeCompare(b.subPath);
   }
+  return a.type === "tree" ? -1 : 1;
 }
 
 function parentPath(path: string) {
