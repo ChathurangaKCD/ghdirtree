@@ -24,7 +24,7 @@ const data = fs.readFileSync(filename, "utf8");
   console.log("New time: ", end - start);
 
   // write json file
-  const filename2 = path.join(__dirname, "../out/out2.json");
+  const filename2 = path.join(__dirname, "../out/out3.json");
   fs.writeFileSync(filename2, JSON.stringify(out2, null, 2));
 }
 
