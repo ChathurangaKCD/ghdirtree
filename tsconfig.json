@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "outDir": "./build",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    /* @todo warnings must be fixed and the following must be enabled */
+    // "strict": true,
+    // "noUnusedLocals": true,     /* Enable error reporting when local variables aren't read. */
+    // "noUnusedParameters": true, /* Raise an error when a function parameter isn't read. */
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
