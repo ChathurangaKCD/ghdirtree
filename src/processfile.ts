@@ -78,7 +78,18 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
     }
   }
   for (const [path, node] of directories) {
-    node.children.sort((a, b) => a.subPath.localeCompare(b.subPath));
+    node.children.sort((a, b) => {
+      const element1IsDirectory = a.type === "tree";
+      const element2IsDirectory = b.type === "tree";
+      // Sort directories before files
+      if (element1IsDirectory && !element2IsDirectory) {
+        return -1;
+      } else if (!element1IsDirectory && element2IsDirectory) {
+        return 1;
+      } else {
+        return a.subPath.localeCompare(b.subPath); // Sort alphabetically by subPath
+      }
+    });
   }
   return Array.from(directories.values()).filter(
     (node) => node.path == node.subPath
