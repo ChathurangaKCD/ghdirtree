@@ -93,9 +93,11 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
     node.children.sort(compareItems);
   }
   // include only root directories. others are already included as children
-  return Array.from(directories.values())
-    .filter((node) => node.path == node.subPath)
-    .sort(compareItems);
+  const tree = Array.from(directories.values()).filter(
+    (node) => node.path == node.subPath
+  );
+  tree.sort(compareItems);
+  return tree;
 }
 
 function compareItems(a: DirectoryNode, b: DirectoryNode) {
