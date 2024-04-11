@@ -48,7 +48,10 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
     // remove excluded files
     if (item.type === "blob") {
       for (const ext of excludingFiles) {
-        if (item.path.endsWith(ext)) {
+        if (item.path.endsWith(`/${ext}`)) {
+          continue itemsLoop;
+        }
+        if (item.path.toLowerCase().endsWith(`.${ext}`)) {
           continue itemsLoop;
         }
       }
@@ -72,6 +75,9 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
     }
   }
   for (const [path, node] of files) {
+    if (path === node.subPath) {
+      directories.set(path, node);
+    }
     const parent = directories.get(parentPath(path));
     if (parent) {
       parent.children.push(node);
