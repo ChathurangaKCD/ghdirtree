@@ -1,6 +1,7 @@
 // read json file
 import * as fs from "fs";
 import * as path from "path";
+import Benchmark from "benchmark";
 
 const filename = path.join(__dirname, "../data/out.json");
 console.log("read file: ", filename);
@@ -16,17 +17,44 @@ const data = fs.readFileSync(filename, "utf8");
 //   const filename2 = path.join(__dirname, "../out/out2.json");
 //   fs.writeFileSync(filename2, JSON.stringify(out1, null, 2));
 // }
-{
-  const obj = JSON.parse(data);
-  const start = Date.now();
-  const out2 = processFile2(obj);
-  const end = Date.now();
-  console.log("New time: ", end - start);
+// {
+//   const obj = JSON.parse(data);
+//   const start = Date.now();
+//   const out2 = processFile2(obj);
+//   const end = Date.now();
+//   console.log("New time: ", end - start);
 
-  // write json file
-  const filename2 = path.join(__dirname, "../out/out3.json");
-  fs.writeFileSync(filename2, JSON.stringify(out2, null, 2));
-}
+//   // write json file
+//   const filename2 = path.join(__dirname, "../out/out3.json");
+//   fs.writeFileSync(filename2, JSON.stringify(out2, null, 2));
+// }
+
+var suite = new Benchmark.Suite();
+
+const data1 = JSON.parse(data);
+const data2 = JSON.parse(data);
+const data3 = JSON.parse(data);
+
+// add tests
+suite
+  .add("impl1", function () {
+    processFile(data1);
+  })
+  .add("impl2", function () {
+    processFile2(data2);
+  })
+  .add("impl3", function () {
+    processFile3(data3);
+  })
+  // add listeners
+  .on("cycle", function (event) {
+    console.log(String(event.target));
+  })
+  .on("complete", function () {
+    console.log("Fastest is " + this.filter("fastest").map("name"));
+  })
+  // run async
+  .run({ async: true });
 
 ////////////////////////////////////////////////////////////////////
 
@@ -111,6 +139,56 @@ function parentPath(path: string) {
   const parts = path.split("/");
   parts.pop();
   return parts.join("/");
+}
+
+////////////////////////////////////////////////////////////////////
+
+function processFile3(repositoryContent: { tree: DirectoryContent[] }) {
+  if (!Array.isArray(repositoryContent.tree)) {
+    return [];
+  }
+  const excludeExtensions = new Set([
+    "md",
+    "txt",
+    "gitignore",
+    "gitkeep",
+    "LICENSE",
+    "keep",
+  ]);
+  const nodes = new Map<string, DirectoryNode>();
+  repositoryContent.tree.forEach((item) => {
+    const extension = item.path.split(".").pop()?.toLowerCase();
+    if (
+      item.type === "blob" &&
+      (excludeExtensions.has(extension) || excludeExtensions.has(item.path))
+    ) {
+      return;
+    }
+    const node: DirectoryNode = {
+      path: item.path,
+      subPath: item.path.split("/").pop()!,
+      type: item.type,
+      children: [],
+    };
+    nodes.set(item.path, node);
+  });
+  // Build the tree
+  nodes.forEach((node, path) => {
+    const parentPath = path.substring(0, path.lastIndexOf("/"));
+    if (nodes.has(parentPath)) {
+      nodes.get(parentPath).children.push(node);
+    }
+  });
+  // Sort children
+  nodes.forEach((node) => {
+    node.children.sort(compareItems);
+  });
+  // Filter root nodes and sort
+  const rootNodes = Array.from(nodes.values()).filter(
+    (node) => !node.path.includes("/")
+  );
+  rootNodes.sort(compareItems);
+  return rootNodes;
 }
 
 ////////////////////////////////////////////////////////////////////

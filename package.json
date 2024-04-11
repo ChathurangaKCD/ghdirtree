@@ -5,5 +5,9 @@
   },
   "scripts": {
     "start": "npx tsc && node build/processfile.js"
+  },
+  "dependencies": {
+    "benchmark": "^2.1.4",
+    "lodash": "^4.17.21"
   }
 }
