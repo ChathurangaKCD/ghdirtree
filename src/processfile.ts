@@ -90,23 +90,25 @@ function processFile2(repositoryContent: { tree: DirectoryContent[] }) {
     }
   }
   for (const [path, node] of directories) {
-    node.children.sort((a, b) => {
-      const element1IsDirectory = a.type === "tree";
-      const element2IsDirectory = b.type === "tree";
-      // Sort directories before files
-      if (element1IsDirectory && !element2IsDirectory) {
-        return -1;
-      } else if (!element1IsDirectory && element2IsDirectory) {
-        return 1;
-      } else {
-        return a.subPath.localeCompare(b.subPath); // Sort alphabetically by subPath
-      }
-    });
+    node.children.sort(compareItems);
   }
   // include only root directories. others are already included as children
-  return Array.from(directories.values()).filter(
-    (node) => node.path == node.subPath
-  );
+  return Array.from(directories.values())
+    .filter((node) => node.path == node.subPath)
+    .sort(compareItems);
+}
+
+function compareItems(a: DirectoryNode, b: DirectoryNode) {
+  const element1IsDirectory = a.type === "tree";
+  const element2IsDirectory = b.type === "tree";
+  // Sort directories before files
+  if (element1IsDirectory && !element2IsDirectory) {
+    return -1;
+  } else if (!element1IsDirectory && element2IsDirectory) {
+    return 1;
+  } else {
+    return a.subPath.localeCompare(b.subPath); // Sort alphabetically by subPath
+  }
 }
 
 function parentPath(path: string) {
